@@ -14,7 +14,14 @@ module.exports = function(source) {
   });
   traverse(ast, {
     Identifier(path) {
-      if (t.isIdentifier(path.node, { name: "_createMenuEntry" })) {
+      const createMenuEntryParent = path.findParent(path => path.isMemberExpression());
+      const isIwant=t.isIdentifier(path.node, { name: "_createMenuEntry" })
+        && createMenuEntryParent.node
+        && createMenuEntryParent.node.object
+        && createMenuEntryParent.node.object.object
+        && createMenuEntryParent.node.object.object.name==="ReplaceMenuProvider";
+
+      if (isIwant) {
         const parent = path.findParent(path => path.isAssignmentExpression());
         const rightFunctionExpression = parent.get("right");
         const functionBody = rightFunctionExpression.get("body").get("body");

@@ -5,6 +5,7 @@ const Memoryfs = require("memory-fs");
 
 module.exports = (fixture, options = {}) => {
   const compiler = webpack({
+    mode:'development',
     context: __dirname,
     entry: `./${fixture}`,
     output: {
