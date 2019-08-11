@@ -6,6 +6,7 @@ const traverse = require("@babel/traverse").default;
 const t = require("@babel/types");
 //将 AST 树重新转为对应的代码字符串
 const generate = require("babel-generator").default;
+const template = require("@babel/template").default;
 
 module.exports = function(source) {
   let ast = parser.parse(source, {
@@ -25,17 +26,13 @@ module.exports = function(source) {
         const parent = path.findParent(path => path.isAssignmentExpression());
         const rightFunctionExpression = parent.get("right");
         const functionBody = rightFunctionExpression.get("body").get("body");
-        const leftIdentifier = t.memberExpression(
-          t.identifier("window"),
-          t.identifier("replaceElement")
-        );
-        const rightIdentifier = t.identifier("replaceElement");
-        const windowReplaceElement = t.assignmentExpression(
-          "=",
-          leftIdentifier,
-          rightIdentifier
-        );
-        functionBody[1].insertAfter(windowReplaceElement);
+        // vm
+        const astVmReplaceElement_1 = template.ast(`var vm=window.vm.$children[0];`);
+        const astVmReplaceElement_2 = template.ast(`vm.$set(vm.bpmnPanel,'replaceElement',replaceElement);`);
+        const astVmReplaceElement_3 = template.ast(`window.bpmnPanel.replaceElement = replaceElement;`);
+        functionBody[2].insertBefore(astVmReplaceElement_1);
+        functionBody[2].insertBefore(astVmReplaceElement_2);
+        functionBody[2].insertBefore(astVmReplaceElement_3);
       }
     }
   });
