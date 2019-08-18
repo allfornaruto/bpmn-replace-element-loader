@@ -1,6 +1,6 @@
 {
   "name": "bpmn-replace-element-loader",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "BpmnElement and BpmnBusinessObject Controls Plugins For bpmn-js And bpmn-properties-panel",
   "main": "src/index.js",
   "repository": "https://github.com/allfornaruto/bpmn-replace-element-loader",
