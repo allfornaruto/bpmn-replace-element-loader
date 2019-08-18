@@ -68,15 +68,15 @@ commands.forEach(command => {
 });
 ```
 
-#### HACK bpmn-js/lib/features/popup-menu/ReplaceMenuProvider.js
+#### HACK [bpmn-js/lib/features/popup-menu/ReplaceMenuProvider.js](https://github.com/bpmn-io/bpmn-js/blob/develop/lib/features/popup-menu/ReplaceMenuProvider.js)
 
-#### HACK bpmn-properties-panel/lib/PropertiesPanel.js
+#### HACK [bpmn-properties-panel/lib/PropertiesPanel.js](https://github.com/bpmn-io/bpmn-js-properties-panel/blob/master/lib/PropertiesPanel.js)
 
-#### HACK bpmn-properties-panel/lib/cmd/index.js
+#### HACK [bpmn-properties-panel/lib/cmd/index.js](https://github.com/bpmn-io/bpmn-js-properties-panel/blob/master/lib/cmd/index.js)
 
-#### HACK bpmn-properties-panel/lib/provider/bpmn/parts/DocumentationProps.js
+#### HACK [bpmn-properties-panel/lib/provider/bpmn/parts/DocumentationProps.js](https://github.com/bpmn-io/bpmn-js-properties-panel/blob/master/lib/provider/bpmn/parts/DocumentationProps.js)
 
-#### HACK bpmn-properties-panel/lib/provider/camunda/parts/ConditionalProps.js
+#### HACK [bpmn-properties-panel/lib/provider/camunda/parts/ConditionalProps.js](https://github.com/bpmn-io/bpmn-js-properties-panel/blob/master/lib/provider/camunda/parts/ConditionalProps.js)
 
-#### HACK bpmn-properties-panel/lib/provider/camunda/parts/implementation.Properties.js
+#### HACK [bpmn-properties-panel/lib/provider/camunda/parts/implementation/Properties.js](https://github.com/bpmn-io/bpmn-js-properties-panel/blob/master/lib/provider/camunda/parts/implementation/Properties.js)
 
