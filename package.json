@@ -1,7 +1,7 @@
 {
   "name": "bpmn-replace-element-loader",
   "version": "1.1.0",
-  "description": "",
+  "description": "BpmnElement and BpmnBusinessObject Controls Plugins For bpmn-js And bpmn-properties-panel",
   "main": "src/index.js",
   "scripts": {
     "test": "jest  --detectOpenHandles --coverage"
@@ -22,5 +22,9 @@
     "memory-fs": "^0.4.1",
     "webpack": "^4.39.1",
     "webpack-cli": "^3.3.6"
+  },
+  "peerDependencies": {
+    "bpmn-js": "^4.0.3",
+    "bpmn-js-properties-panel": "^0.32.1"
   }
 }

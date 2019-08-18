@@ -18,7 +18,7 @@ const isIwant_replaceElement = (path) => {
   return isIwant;
 };
 
-const isIwant_commandStack = (path) => path.node.id.name === "CommandInitializer";
+const isIwant_commandStack = (path) => path.node && path.node.id && path.node.id.name === "CommandInitializer";
 
 const isIwant_initBpmn = (path)=>{
   let isIwantLeftPropertiesName = false;
@@ -49,7 +49,7 @@ const isIwant_conditionalEntry = (path)=>{
         result.push(item.name);
         return result;
       },[]);
-      isIwantConditionalEntry = moduleExportsParams.every(item=>["group","element","bpmnFactory","translate"].includes(item));
+      isIwantConditionalEntry = ["group","element","bpmnFactory","translate"].every(item=>moduleExportsParams.includes(item));
     }
   }finally {
     return isIwantConditionalEntry ;
@@ -65,7 +65,7 @@ const isIwant_Element_BusinessObject =(path) =>{
         result.push(item.name);
         return result;
       },[]);
-      isIwantElementAndBusinessObject = moduleExportsParams.every(item=>["element","bpmnFactory","options","translate"].includes(item));
+      isIwantElementAndBusinessObject = ["element","bpmnFactory","options","translate"].every(item=>moduleExportsParams.includes(item));
     }
   }finally {
     return isIwantElementAndBusinessObject;
@@ -83,43 +83,58 @@ module.exports = function (source) {
         const parent = path.findParent(path => path.isAssignmentExpression());
         const rightFunctionExpression = parent.get("right");
         const functionBody = rightFunctionExpression.get("body").get("body");
-        const astReplaceElement = template.ast(`window.bpmnPanel.replaceElement = replaceElement;`);
-        functionBody[2].insertBefore(astReplaceElement);
+        const astVmReplaceElement_1 = template.ast(`var vm=window.vm.$children[0];`);
+        const astVmReplaceElement_2 = template.ast(`vm.$set(vm.bpmnPanel,'replaceElement',replaceElement);`);
+        const astVmReplaceElement_3 = template.ast(`window.bpmnPanel.replaceElement = replaceElement;`);
+        functionBody[2].insertBefore(astVmReplaceElement_1);
+        functionBody[2].insertBefore(astVmReplaceElement_2);
+        functionBody[2].insertBefore(astVmReplaceElement_3);
       }
     },
     FunctionDeclaration(path) {
       if(isIwant_commandStack(path)){
         const functionBody = path.get("body").get("body");
+        const astCommandStackVm = template.ast(`var vm=window.vm.$children[0];`);
+        const astCommandStackVmSet = template.ast(`vm.$set(vm.bpmnPanel,'bpmnPanelCommandStack',commandStack);`);
         const astCommandStack = template.ast(`window.bpmnPanel.bpmnPanelCommandStack=commandStack;`);
+        functionBody[0].insertBefore(astCommandStackVm);
+        functionBody[0].insertBefore(astCommandStackVmSet);
         functionBody[0].insertBefore(astCommandStack);
       }
     },
     AssignmentExpression(path) {
-     if(isIwant_initBpmn(path)){
-       const functionBody = path.get("right.body.body");
-       const astBpmnPanel = template.ast(`window.bpmnPanel={};`);
-       //[NodePath...] NodePath可以使用insertBefore方法
-       functionBody[0].insertBefore(astBpmnPanel);
-     }
+      if(isIwant_initBpmn(path)){
+        const functionBody = path.get("right.body.body");
+        const astBpmnPanel = template.ast(`window.bpmnPanel={};`);
+        //[NodePath...] NodePath可以使用insertBefore方法
+        functionBody[0].insertBefore(astBpmnPanel);
+      }
     },
     VariableDeclaration(path){
       if(isIwant_elementDocuEntry(path)){
+        const astBpmnPanelElementDocuEntryVm = template.ast(`var vm=window.vm.$children[0];`);
+        const astBpmnPanelElementDocuEntryVmSet = template.ast(`vm.$set(vm.bpmnPanel,'bpmnPanelElementDocuEntry',group.entries[0]);`);
         const astBpmnPanelElementDocuEntry = template.ast(`window.bpmnPanel.bpmnPanelElementDocuEntry=group.entries[0];`);
         const functionBody = path.container;
         //[Node...] Node类型不能使用insertBefore方法
-        functionBody.splice(path.key,0,astBpmnPanelElementDocuEntry);
+        functionBody.splice(path.key,0,astBpmnPanelElementDocuEntryVm,astBpmnPanelElementDocuEntryVmSet,astBpmnPanelElementDocuEntry);
       }
       if(isIwant_conditionalEntry(path)){
+        const astBpmnPanelConditionalEntryVm = template.ast(`var vm=window.vm.$children[0];`);
+        const astBpmnPanelConditionalEntryVmSet = template.ast(`vm.$set(vm.bpmnPanel,'bpmnPanelConditionalEntry',group.entries[0]);`);
         const astBpmnPanelConditionalEntry = template.ast(`window.bpmnPanel.bpmnPanelConditionalEntry=group.entries[0];`);
         const functionBody = path.container;
         //[Node...] Node类型不能使用insertBefore方法
-        functionBody.push(astBpmnPanelConditionalEntry);
+        functionBody.push(...[astBpmnPanelConditionalEntryVm,astBpmnPanelConditionalEntryVmSet,astBpmnPanelConditionalEntry]);
       }
       if(isIwant_Element_BusinessObject(path)){
+        const astVm = template.ast(`var vm=window.vm.$children[0];`);
+        const astElementVmSet = template.ast(`vm.$set(vm.bpmnPanel,'bpmnPanelElement',element);`);
+        const astBusinessObjectVmSet = template.ast(`vm.$set(vm.bpmnPanel,'bpmnPanelBusinessObject',bo);`);
         const astElement = template.ast(`window.bpmnPanel.bpmnPanelElement=element;`);
         const astBusinessObject = template.ast(`window.bpmnPanel.bpmnPanelBusinessObject=bo;`);
         const functionBody = path.container;
-        functionBody.splice(path.key+1,0,astElement,astBusinessObject);
+        functionBody.splice(path.key+1,0,astVm,astElementVmSet,astBusinessObjectVmSet,astElement,astBusinessObject);
       }
     }
   });
