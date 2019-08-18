@@ -10,7 +10,7 @@
 
 >如果你使用其他框架，那么你需要自己实现监听window.bpmnPanel对象。
 
-##使用方法
+## 使用方法
 
 ```javascript
 //Vue-cli3 vue.config.js
@@ -28,7 +28,7 @@ chainWebpack(config) {
 ```
 
 
-###强制修改Task类型
+### 强制修改Task类型
 ```javascript
 //Task type
 const TaskList = [
@@ -50,7 +50,7 @@ const element = bpmnPanel.bpmnPanelElement;
 bpmnPanel.replaceElement(element,{type:'bpmn:UserTask'})
 ```
 
-###添加Documentation属性
+### 添加Documentation属性
 ```javascript
 const bpmnPanel = window.bpmnPanel;
 const element = bpmnPanel.bpmnPanelElement;
@@ -58,7 +58,7 @@ const command = bpmnPanel.bpmnPanelElementDocuEntry.set(element, {documentation:
 bpmnPanel.bpmnPanelCommandStack.execute(command.cmd, command.context);
 ```
 
-###添加Expresstion属性
+### 添加Expresstion属性
 ```javascript
 const bpmnPanel = window.bpmnPanel;
 const element = bpmnPanel.bpmnPanelElement;
