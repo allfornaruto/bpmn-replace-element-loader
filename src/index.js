@@ -83,12 +83,14 @@ module.exports = function (source) {
         const parent = path.findParent(path => path.isAssignmentExpression());
         const rightFunctionExpression = parent.get("right");
         const functionBody = rightFunctionExpression.get("body").get("body");
-        const astVmReplaceElement_1 = template.ast(`var vm=window.vm.$children[0];`);
-        const astVmReplaceElement_2 = template.ast(`vm.$set(vm.bpmnPanel,'replaceElement',replaceElement);`);
-        const astVmReplaceElement_3 = template.ast(`window.bpmnPanel.replaceElement = replaceElement;`);
-        functionBody[2].insertBefore(astVmReplaceElement_1);
-        functionBody[2].insertBefore(astVmReplaceElement_2);
-        functionBody[2].insertBefore(astVmReplaceElement_3);
+        const ast = template.statements(`
+          if(window.vm){
+            var vm=window.vm.$children[0];
+            vm.$set(vm.bpmnPanel,'replaceElement',replaceElement);
+          }
+          window.bpmnPanel.replaceElement = replaceElement;
+        `)();
+        functionBody[2].insertBefore(ast);
       }
     },
     FunctionDeclaration(path) {
